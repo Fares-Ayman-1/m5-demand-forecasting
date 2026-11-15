@@ -33,6 +33,12 @@ window (days 1942–1969), submitted 2026-11-15 with `scripts/kaggle_submit.py`.
   accuracy check raises **retrain recommended**. In production, that alert would trigger a retrain
   on fresh data.
 
+## Screenshots
+
+| Forecast vs history | Most recent backtest | Error by aggregation level |
+|---|---|---|
+| ![Forecast](docs/images/dashboard-forecast.jpg) | ![Backtest](docs/images/dashboard-backtest.jpg) | ![Error by level](docs/images/dashboard-error-by-level.jpg) |
+
 ## Architecture
 
 ```mermaid
