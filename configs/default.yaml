@@ -1,0 +1,43 @@
+# All paths are relative to the project folder unless absolute.
+competition: m5-forecasting-accuracy
+
+paths:
+  raw: data/raw
+  interim: data/interim
+  models: models
+  reports: reports
+
+# MLflow store shared by all ml-portfolio projects: SQLite database D:\ml-portfolio\mlflow.db,
+# artifacts in D:\ml-portfolio\mlruns. MLFLOW_TRACKING_URI overrides the database (CI uses a temp dir).
+tracking_uri: ../mlflow.db
+artifact_root: ../mlruns
+experiment: m5-demand-forecasting
+
+horizon: 28
+last_day: 1941            # last day with known sales in sales_train_evaluation.csv
+# Rolling-origin backtests: each value is the last training day; the next 28 days are scored.
+backtest_cutoffs: [1913, 1885, 1857]
+# Days before this are dropped from training rows (features still use them) to fit 11.7 GB of RAM.
+train_start_day: 1000
+
+features:
+  # Every sales-based feature is shifted by >= horizon, so one model forecasts all 28 days
+  # without recursion and without seeing anything inside the forecast window.
+  lags: [28, 29, 30, 35, 42, 49, 56, 91, 364]
+  rolling_windows: [7, 14, 28, 56, 112]
+
+lgbm:
+  objective: tweedie
+  tweedie_variance_power: 1.1
+  learning_rate: 0.05
+  num_leaves: 255
+  min_data_in_leaf: 100
+  feature_fraction: 0.6
+  bagging_fraction: 0.7
+  bagging_freq: 1
+  lambda_l2: 0.1
+  max_bin: 127
+  num_threads: 10
+  seed: 42
+  verbose: -1
+num_boost_round: 1000

@@ -1,0 +1,63 @@
+[project]
+name = "m5forecast"
+version = "0.1.0"
+description = "End-to-end retail demand forecasting on the M5 (Walmart) dataset: WRMSSE backtests, per-store LightGBM, forecast API and dashboard."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = { text = "MIT" }
+authors = [{ name = "Fares Ayman" }]
+# Core = what the forecast API needs at serving time (kept small for the Docker image).
+dependencies = [
+    "numpy>=2.0",
+    "polars>=1.10",
+    "pyarrow>=17",
+    "pydantic>=2.9",
+    "pyyaml>=6.0",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+]
+
+[project.optional-dependencies]
+# training, metric, reports and monitoring
+train = ["pandas>=2.2", "lightgbm>=4.5", "mlflow>=3.0"]
+dashboard = ["streamlit>=1.40", "plotly>=5.24"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-cov>=6.0",
+    "httpx>=0.27",
+    "ruff>=0.7",
+    "mypy>=1.13",
+    "pandas-stubs>=2.2",
+    "types-pyyaml>=6.0",
+    "kaggle>=1.6",
+    "truststore>=0.10",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/m5forecast"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "NPY", "PD", "RUF"]
+# PD010/PD011: pandas-only rules that misfire on polars .pivot / .values
+ignore = ["PD010", "PD011", "RUF001", "RUF002", "RUF003"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = false
+warn_unused_ignores = true
+ignore_missing_imports = true
+files = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --cov=m5forecast --cov-report=term-missing"

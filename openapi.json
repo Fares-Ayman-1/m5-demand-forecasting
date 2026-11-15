@@ -1,0 +1,628 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "M5 Demand Forecasting API",
+    "description": "Daily unit-sales forecasts for 30,490 Walmart item-store series (M5). Read-only. Errors always use `{\"error\": {\"code\", \"message\", \"details\"}}`.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Liveness check",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/model": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Model version and backtest scores",
+        "operationId": "model_info_v1_model_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/series": {
+      "get": {
+        "tags": [
+          "series"
+        ],
+        "summary": "List series",
+        "operationId": "list_series_v1_series_get",
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Store Id"
+            }
+          },
+          {
+            "name": "dept_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Dept Id"
+            }
+          },
+          {
+            "name": "cat_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cat Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeriesPage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`series_not_found`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`validation_error` or `unknown_query_parameter`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/series/{series_id}": {
+      "get": {
+        "tags": [
+          "series"
+        ],
+        "summary": "Get one series",
+        "operationId": "get_series_v1_series__series_id__get",
+        "parameters": [
+          {
+            "name": "series_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Series Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Series"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`series_not_found`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`validation_error` or `unknown_query_parameter`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/series/{series_id}/forecasts": {
+      "get": {
+        "tags": [
+          "forecasts"
+        ],
+        "summary": "Forecast for the next days",
+        "operationId": "get_forecast_v1_series__series_id__forecasts_get",
+        "parameters": [
+          {
+            "name": "series_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Series Id"
+            }
+          },
+          {
+            "name": "horizon",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 28,
+              "minimum": 1,
+              "description": "Number of days ahead (1-28)",
+              "default": 28,
+              "title": "Horizon"
+            },
+            "description": "Number of days ahead (1-28)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`series_not_found`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`validation_error` or `unknown_query_parameter`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/series/{series_id}/history": {
+      "get": {
+        "tags": [
+          "series"
+        ],
+        "summary": "Recent actual sales",
+        "operationId": "get_history_v1_series__series_id__history_get",
+        "parameters": [
+          {
+            "name": "series_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Series Id"
+            }
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 365,
+              "minimum": 1,
+              "description": "Number of most recent days (1-365)",
+              "default": 90,
+              "title": "Days"
+            },
+            "description": "Number of most recent days (1-365)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoryResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "`series_not_found`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "`validation_error` or `unknown_query_parameter`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErrorBody": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "examples": [
+              "series_not_found"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "examples": [
+              "No series with id 'X'."
+            ]
+          },
+          "details": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Details"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorBody"
+      },
+      "ErrorResponse": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorBody"
+          }
+        },
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "title": "ErrorResponse"
+      },
+      "ForecastResponse": {
+        "properties": {
+          "series_id": {
+            "type": "string",
+            "title": "Series Id"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit",
+            "default": "units sold per day"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Point"
+            },
+            "type": "array",
+            "title": "Data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "series_id",
+          "data"
+        ],
+        "title": "ForecastResponse"
+      },
+      "HistoryResponse": {
+        "properties": {
+          "series_id": {
+            "type": "string",
+            "title": "Series Id"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit",
+            "default": "units sold per day"
+          },
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Point"
+            },
+            "type": "array",
+            "title": "Data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "series_id",
+          "data"
+        ],
+        "title": "HistoryResponse"
+      },
+      "ModelInfo": {
+        "properties": {
+          "api_version": {
+            "type": "string",
+            "title": "Api Version"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "trained_at": {
+            "type": "string",
+            "title": "Trained At"
+          },
+          "horizon": {
+            "type": "integer",
+            "title": "Horizon"
+          },
+          "last_known_day": {
+            "type": "integer",
+            "title": "Last Known Day"
+          },
+          "backtest_cutoffs": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Backtest Cutoffs"
+          },
+          "wrmsse_mean": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Wrmsse Mean",
+            "description": "Mean WRMSSE over backtest folds per model (lower is better)"
+          },
+          "mlflow_run_ids": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Mlflow Run Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "api_version",
+          "model",
+          "trained_at",
+          "horizon",
+          "last_known_day",
+          "backtest_cutoffs",
+          "wrmsse_mean",
+          "mlflow_run_ids"
+        ],
+        "title": "ModelInfo"
+      },
+      "Pagination": {
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "limit",
+          "offset",
+          "total"
+        ],
+        "title": "Pagination"
+      },
+      "Point": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "day": {
+            "type": "integer",
+            "title": "Day",
+            "description": "M5 day number (d_1 = 2011-01-29)"
+          },
+          "value": {
+            "type": "number",
+            "title": "Value"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "day",
+          "value"
+        ],
+        "title": "Point"
+      },
+      "Series": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "examples": [
+              "FOODS_3_090_CA_3_evaluation"
+            ]
+          },
+          "item_id": {
+            "type": "string",
+            "title": "Item Id"
+          },
+          "dept_id": {
+            "type": "string",
+            "title": "Dept Id"
+          },
+          "cat_id": {
+            "type": "string",
+            "title": "Cat Id"
+          },
+          "store_id": {
+            "type": "string",
+            "title": "Store Id"
+          },
+          "state_id": {
+            "type": "string",
+            "title": "State Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "item_id",
+          "dept_id",
+          "cat_id",
+          "store_id",
+          "state_id"
+        ],
+        "title": "Series"
+      },
+      "SeriesPage": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Series"
+            },
+            "type": "array",
+            "title": "Data"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "pagination"
+        ],
+        "title": "SeriesPage"
+      }
+    }
+  }
+}

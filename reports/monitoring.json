@@ -1,0 +1,25 @@
+{
+  "checked_at": "2026-11-15T16:20:51+00:00",
+  "window": {
+    "reference_days": [
+      1886,
+      1913
+    ],
+    "current_days": [
+      1914,
+      1941
+    ]
+  },
+  "drift": {
+    "sales_psi": 0.0013764597668095358,
+    "price_psi": 3.134184265035517e-05
+  },
+  "drift_alert": false,
+  "accuracy": {
+    "latest_cutoff": 1913,
+    "latest_wrmsse": 0.7835480017947102,
+    "relative_change": 0.160938018801708
+  },
+  "accuracy_alert": true,
+  "retrain_recommended": true
+}

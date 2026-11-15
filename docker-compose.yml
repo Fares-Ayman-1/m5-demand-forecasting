@@ -1,0 +1,19 @@
+services:
+  api:
+    build: .
+    image: m5forecast:latest
+    ports: ["8000:8000"]
+    volumes:
+      - ./reports/serving:/app/reports/serving:ro
+
+  dashboard:
+    image: m5forecast:latest
+    depends_on: [api]
+    command: ["streamlit", "run", "app/dashboard.py", "--server.port=8501", "--server.address=0.0.0.0",
+              "--server.headless=true"]
+    ports: ["8501:8501"]
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8501/_stcore/health"]
+    volumes:
+      - ./reports/serving:/app/reports/serving:ro
+      - ./reports/backtest:/app/reports/backtest:ro

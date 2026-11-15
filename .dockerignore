@@ -1,0 +1,16 @@
+.venv/
+/data/
+/models/
+/reports/
+/mlruns/
+.git/
+.github/
+tests/
+notebooks/
+**/__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+*.md
+!README.md

@@ -1,0 +1,31 @@
+# data and artefacts (competition data and anything derived from it must never be committed)
+# root-anchored so the source packages src/m5forecast/data and .../models are NOT ignored
+/data/
+/models/
+/mlruns/
+/reports/**/*.parquet
+/reports/*.csv
+/reports/backtest/
+/reports/train_log.txt
+/reports/*.log
+*.lgb
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# os / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# secrets
+.env
+kaggle.json
