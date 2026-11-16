@@ -27,6 +27,11 @@ LightGBM is **20.4% better** than the best baseline, and it wins in every backte
 window (days 1942–1969), submitted 2026-11-15 with `scripts/kaggle_submit.py`. Full tables, with the MLflow run ids behind each number, are in
 [RESULTS.md](RESULTS.md), which is generated from MLflow by `python -m m5forecast.report`.
 
+**Kaggle notebook:** a compact, runnable version of the pipeline on the most recent backtest window (days
+1914–1941). It scores WRMSSE **0.7809** against 0.8697 for the best baseline, in line with this repo's
+0.7835 on the same window:
+[M5 Leakage-Safe LightGBM and Exact WRMSSE](https://www.kaggle.com/code/faresayman1/m5-leakage-safe-lightgbm-and-exact-wrmsse).
+
 **Monitoring on this data:**
 - Sales and price distributions are stable: PSI 0.001 and 0.000.
 - The most recent backtest window (days 1914–1941) is 16% harder than the two before it, so the
