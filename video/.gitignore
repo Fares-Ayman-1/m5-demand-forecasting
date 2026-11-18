@@ -1,0 +1,6 @@
+node_modules/
+out/
+capture/
+# anything derived from the competition data (JSON, images, screen captures) stays out of git
+public/data/
+public/demo.mp4

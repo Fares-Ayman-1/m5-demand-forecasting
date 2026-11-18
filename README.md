@@ -20,8 +20,9 @@ Mean WRMSSE over three rolling 28-day backtests across all 30,490 series (lower 
 | Seasonal naive (repeat last week) | 0.8938 |
 | Moving average (last 28 days) | 1.0766 |
 
-LightGBM is **20.4% better** than the best baseline, and it wins in every backtest window and at all
-12 aggregation levels.
+LightGBM is **20.4% better** than the best baseline. It wins in every backtest window and at 10 of the 12
+aggregation levels; on the most recent window, seasonal naive is slightly better at the total
+(0.7514 vs 0.7926) and state (0.7544 vs 0.7635) levels.
 
 **Kaggle late submission:** private-leaderboard WRMSSE **0.59184** on the competition's hidden test
 window (days 1942–1969), submitted 2026-11-15 with `scripts/kaggle_submit.py`. Full tables, with the MLflow run ids behind each number, are in

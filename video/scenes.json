@@ -1,0 +1,16 @@
+[
+  { "key": "title", "dur": 180, "energy": 0, "whoosh": false },
+  { "key": "problem", "dur": 180, "energy": 1 },
+  { "key": "hierarchy", "dur": 190, "energy": 1 },
+  { "key": "leakage", "dur": 200, "energy": 1, "ticks": [96, 110] },
+  { "key": "model", "dur": 180, "energy": 2, "ticks": [86] },
+  { "key": "backtests", "dur": 165, "energy": 2, "ticks": [50, 62, 74] },
+  { "key": "results", "dur": 250, "energy": 3, "riser": true, "ticks": [66, 74, 82, 118] },
+  { "key": "levels", "dur": 250, "energy": 2 },
+  { "key": "forecast", "dur": 240, "energy": 2 },
+  { "key": "kaggle", "dur": 135, "energy": 2, "boom": true },
+  { "key": "monitoring", "dur": 210, "energy": 1, "ticks": [80] },
+  { "key": "demo", "dur": 360, "energy": 2 },
+  { "key": "engineering", "dur": 150, "energy": 2 },
+  { "key": "outro", "dur": 210, "energy": 1, "boom": true }
+]
